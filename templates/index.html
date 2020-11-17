@@ -1,0 +1,176 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<title>Team Box </title>
+        <link rel="shortcut icon" href="../static/favicon.ico" />
+        <link rel="shortcut icon" sizes="114x114" href="../static/favicon.ico" />
+        <link rel="shortcut icon" sizes="72x72" href="../static/favicon.ico" />
+
+
+		<link rel="stylesheet" href="../static/style.css">
+	</head>
+	<body style="text-align: center;">
+		<ul>
+			<li class="picturetool2"><img src="../static/home.png" alt="Home" style=" height:20px; width: 20px; margin-top: 15px;">	</li>
+		  <li><a class="active" href="#home">Home</a></li>
+		  <li class="picturetool"><img src="../static/About.png" alt="Home" style=" height:20px; width: 20px; margin-top: 15px;">	</li>
+		  <li><a href="/about">About</a></li>
+		  <li class="picturetool"><img src="../static/Members.png" alt="Home" style=" height:20px; width: 20px; margin-top: 15px;">	</li>
+		  <li><a href="/members">Members</a></li>
+		  <li class="picturetool"><img src="../static/Idea.png" alt="Home" style=" height:20px; width: 20px; margin-top: 15px;">	</li>
+		  <li><a href="/mainidea">Our Main Idea</a></li>
+            <li class="picturetool"><img src="../static/25603-200.png" alt="Home" style=" height:20px; width: 20px; margin-top: 15px;">
+  <li><a  href="/form">Form</a></li>
+
+		  <li class="LOGOSF">THE SMART ROOM PROJECT</h1></a></li>
+		</ul>
+		<h1 class="LOGO">SMART ROOM PROJECT</h1>
+
+
+
+
+
+
+
+
+
+<div class="thestarter">
+    <h2><span class="temp">LIGHT IS CURRENTLY:</span> <span id="thiswillrefresh">OFF </span></h2><button id="secondbutton" onclick="LightOFF()"> TURN THE LIGHT ON </button><span id="gifmoving"><img src="../static/loading.gif" alt="gifmoving" style=" height: 20px; width: 20px;"></span><span id="ledimage1"><img src="../static/led.png" alt="led" style=" height: 20px; width: 20px;"></span><span id="ledimage2"><img src="../static/onled.png" alt="led" style=" height: 20px; width: 20px;"></span>
+
+
+
+		<h4 id="firstparagraph"> In the project we were thought how to control a photon with a website which can both be used online and on our phones. <br> this will allow us to have a big range of people intersted in trying our product the <b><u style="color: #f24343;"> SMART ROOM </u></b></h4>
+    <h4>THE HIGHEST TEMPERATURE IS:</h4>
+    <h4 style="text-align: center;
+        color:#f24343;
+        font-size:20px;
+        font-family: "Courier"; ">{{ highest.temperature }}</h4>
+        <h4 style="text-align: center;
+        color:#f24343;
+        font-size:20px;
+        font-family: "Courier";">{{ highest.reading_date }}</h4>
+
+    <h4>THE LOWEST TEMPERATURE IS:</h4>
+    <h4 style="text-align: center;
+        color:#f24343;
+        font-size:20px;
+        font-family: "Courier";">{{lowest.temperature}}</h4>
+        <h4 style="text-align: center;
+        color:#f24343;
+        font-size:20px;
+        font-family: "Courier";">{{ lowest.reading_date }}</h4>
+
+		</div>
+
+		<table>
+		<h1 class="LOGO" style="text-align: center;"> HISTORY: </h1>
+            <thead>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Temperature</th>
+            </thead>
+            <tbody>
+            {%  for record in records %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ record.reading_date|format_date}}</td>
+                <td> {{ record.temperature}}</td>
+
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan= "2"><h1 class="LOGO" style="text-align: center;"> THERE IS NO DATA GO AWAY</h1></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+		</table>
+
+		<h4 id="signature""> By: Diogo Silva</h4>
+		<script
+ src="https://code.jquery.com/jquery-3.2.1.min.js"
+ integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+ crossorigin="anonymous"></script>
+
+	<script>
+
+		function FanOFF(){
+			var buttonfirst = document.getElementById("firsbutton");
+			var firststate = document.getElementById("thefirststate")
+			if (buttonfirst.innerText == "TURN THE FAN OFF"){
+				 buttonfirst.innerText = "TURN THE FAN ON";
+				 alert("Turning the Fan OFF")
+				 firststate.innerText = "OFF"
+
+
+				 } else {
+				 buttonfirst.innerText = "TURN THE FAN ON";
+				 alert("Turning the Fan ON")
+				 firststate.innerText = "ON"
+				 buttonfirst.innerText = "TURN THE FAN OFF"
+
+
+			}
+		}
+		function LightOFF () {
+			var buttonsecond = document.getElementById("secondbutton");
+			var buttonrefresh = document.getElementById("thiswillrefresh")
+			if (buttonsecond.innerText == "TURN THE LIGHT OFF"){
+				 alert("Turning the LIGHT OFF")
+				 $.post("/led", { arg: "off"});
+				 buttonrefresh.innerText = "OFF"
+					buttonsecond.innerText = "TURN THE LIGHT ON"
+					gifmoving.hidden = true
+					ledimage1.hidden =  false
+				 	ledimage2.hidden = true
+
+
+
+
+				 } else {
+				 alert("Turning the LIGHT ON")
+				 $.post("/led", { arg: "on"});
+				 buttonrefresh.innerText = "ON"
+					buttonsecond.innerText = "TURN THE LIGHT OFF"
+					gifmoving.hidden = true
+					ledimage2.hidden = false
+				 	ledimage1.hidden = true
+
+
+
+		}
+	}
+	$(document).ready(refresh)
+
+	function refresh (){
+			gifmoving.hidden = false
+			ledimage2.hidden = true
+				 	ledimage1.hidden = true
+			$.getJSON("/ledstate",
+			function (data) {
+				console.log(data);
+				var currentstate = data.result;
+				var buttonrefresh = document.getElementById("thiswillrefresh")
+				var buttonsecond = document.getElementById("secondbutton")
+				console.log(currentstate);
+				if (currentstate == 1){
+					buttonrefresh.innerText = "ON"
+					buttonsecond.innerText = "TURN THE LIGHT OFF"
+					gifmoving.hidden = true
+					ledimage2.hidden = false
+				 	ledimage1.hidden = true
+
+				}else{
+					buttonrefresh.innerText = "OFF"
+					buttonsecond.innerText = "TURN THE LIGHT ON"
+					gifmoving.hidden = true
+					ledimage2.hidden = true
+				 	ledimage1.hidden = false
+				}
+
+			})
+	}
+
+
+	</script>
+	</body>
+	</html>
